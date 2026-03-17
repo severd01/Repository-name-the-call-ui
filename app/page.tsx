@@ -143,7 +143,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
       <div className="mx-auto max-w-3xl">
         <header className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight">TEST VERSION</h1>
+          <h1 className="text-4xl font-bold tracking-tight">The Call</h1>
           <p className="mt-2 text-lg text-slate-600">
             Make the call with limited information.
           </p>
