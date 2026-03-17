@@ -6,7 +6,6 @@
     "difficulty": "Medium",
     "scenario": "On a cold Christmas Eve evening, three members of the same family arrive at the ER within a short period of time. Earlier that night, they had eaten dinner together at home. All report headache, dizziness, nausea, and fatigue. None have a fever. Flu is circulating in the community, and at first the symptoms seem routine. But one detail in the case suggests a different explanation.",
     "image": "/images/sick-family.png",
-
     "cluesRound1": [
       {
         "title": "Check flu exposure history",
@@ -24,25 +23,32 @@
         "result": "They say they've been staying inside most of the day with the windows closed because of the cold."
       }
     ],
-
     "cluesRound2": [
       {
         "title": "Check for fever",
         "type": "Neutral",
-        "result": "None of the patients have a fever."
+        "result": {
+          "default": "None of the patients have a fever.",
+          "biased": "None of the patients currently have a fever, though early flu cases can sometimes present without one."
+        }
       },
       {
         "title": "Give oxygen briefly",
         "type": "Helpful",
-        "result": "All three patients report feeling noticeably better after receiving oxygen."
+        "result": {
+          "default": "All three patients report feeling noticeably better after receiving oxygen.",
+          "biased": "All three patients report some improvement after oxygen, though the symptoms do not fully resolve."
+        }
       },
       {
         "title": "Ask about recent illness exposure",
         "type": "Misleading",
-        "result": "A close contact recently had a stomach virus earlier this week."
+        "result": {
+          "default": "A close contact recently had a stomach virus earlier this week.",
+          "biased": "A close contact recently had a stomach virus, making a contagious illness seem more likely."
+        }
       }
     ],
-
     "decisions": [
       {
         "id": "A",
@@ -57,15 +63,10 @@
         "text": "Administer oxygen and investigate possible carbon monoxide exposure."
       }
     ],
-
     "correct": "C",
-
     "expertAction": "Keep the family for evaluation and immediately investigate carbon monoxide exposure.",
-
     "expertExplanation": "Multiple people from the same home developing identical symptoms at the same time strongly suggests an environmental cause. Carbon monoxide poisoning often presents with headache, dizziness, and nausea and can easily be mistaken for flu or food poisoning.",
-
     "lesson": "When several patients from one location get sick together, think environmental exposure before common illness.",
-
     "outcomes": {
       "A": "They are sent home. Overnight, their symptoms worsen as the exposure continues.",
       "B": "They are discharged with a flu diagnosis while the real hazard remains active in their home.",
