@@ -1,0 +1,61 @@
+[
+  {
+    "id": 3,
+    "title": "The Sick Family",
+    "role": "Emergency Room Doctor",
+    "difficulty": "Medium",
+    "scenario": "Three members of the same family arrive at the ER within a short period of time. All report headache, dizziness, nausea, and fatigue. None have fever. Flu is circulating in the community, and at first the symptoms seem routine. But one pattern in the case suggests a different explanation.",
+    "image": "/images/sick-family.png",
+    "cluesRound1": [
+      {
+        "title": "Check flu exposure history",
+        "result": "Two family members report coworkers recently had the flu."
+      },
+      {
+        "title": "Ask what they ate",
+        "result": "All three ate the same home-cooked dinner earlier in the evening."
+      },
+      {
+        "title": "Ask where symptoms began",
+        "result": "All symptoms began while they were inside their home."
+      }
+    ],
+    "cluesRound2": [
+      {
+        "title": "Check for fever",
+        "result": "None of the patients have a fever."
+      },
+      {
+        "title": "Give oxygen briefly",
+        "result": "All three patients report feeling noticeably better after oxygen."
+      },
+      {
+        "title": "Check timing of symptoms",
+        "result": "Symptoms developed gradually over several hours."
+      }
+    ],
+    "decisions": [
+      {
+        "id": "A",
+        "text": "Treat as food poisoning and discharge."
+      },
+      {
+        "id": "B",
+        "text": "Treat as flu and discharge."
+      },
+      {
+        "id": "C",
+        "text": "Investigate possible carbon monoxide exposure."
+      }
+    ],
+    "correct": "C",
+    "expertAction": "Keep the family for evaluation and investigate carbon monoxide exposure.",
+    "expertExplanation": "Multiple people from the same home developing the same symptoms at the same time is a strong environmental pattern. Carbon monoxide poisoning often looks like flu or food poisoning.",
+    "lesson": "When several patients from one location get sick together, think environmental exposure.",
+    "outcomes": {
+      "A": "They go home. Hours later, their condition deteriorates rapidly.",
+      "B": "They are discharged with a flu diagnosis while the real hazard remains active in their home.",
+      "C": "The environmental cause is identified and the family avoids further exposure."
+    }
+  }
+]
