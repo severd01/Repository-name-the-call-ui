@@ -16,6 +16,7 @@ export type Puzzle = {
   role: string;
   difficulty: string;
   scenario: string;
+  image?: string;
   cluesRound1: Clue[];
   cluesRound2: Clue[];
   decisions: Decision[];
@@ -39,6 +40,7 @@ export const puzzles: Puzzle[] = [
     difficulty: "Medium",
     scenario:
       "Three members of the same family arrive at the ER with headache, dizziness, nausea, and fatigue. None have fever. Flu is circulating in the community, so at first the symptoms seem routine.",
+      image: "/images/sick-family.png",
     cluesRound1: [
       {
         title: "Ask where symptoms started",

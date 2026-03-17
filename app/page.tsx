@@ -110,6 +110,16 @@ export default function Home() {
                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500 mb-2">
                   Case File {puzzleIndex + 1} of {puzzles.length}
                 </p>
+                {puzzle.image && (
+  <div className="mb-4 overflow-hidden rounded-xl">
+    <img
+      src={puzzle.image}
+      alt={puzzle.title}
+      className="w-full h-44 object-cover"
+    />
+  </div>
+)}
+
 
                 <h2 className="text-2xl font-bold text-neutral-900 mb-1">
                   {puzzle.title}
