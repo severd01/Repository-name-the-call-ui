@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import puzzles from "../data/puzzles.json";
+
 type Screen =
   | "home"
   | "scenario"
@@ -9,6 +10,13 @@ type Screen =
   | "investigate2"
   | "decision"
   | "reveal";
+
+type ChoiceId = "A" | "B" | "C";
+
+type Clue = {
+  title: string;
+  result: string;
+};
 
 function getScore(isCorrect: boolean, cluesUsed: number) {
   if (!isCorrect) return 0;
@@ -109,16 +117,16 @@ export default function Home() {
                 <p className="text-xs font-semibold uppercase tracking-[0.25em] text-neutral-500 mb-2">
                   Case File {puzzleIndex + 1} of {puzzles.length}
                 </p>
-                {puzzle.image && (
-  <div className="mb-4 overflow-hidden rounded-xl">
-    <img
-      src={puzzle.image}
-      alt={puzzle.title}
-      className="w-full h-44 object-cover"
-    />
-  </div>
-)}
 
+                {puzzle.image && (
+                  <div className="mb-4 overflow-hidden rounded-xl">
+                    <img
+                      src={puzzle.image}
+                      alt={puzzle.title}
+                      className="w-full h-44 object-cover"
+                    />
+                  </div>
+                )}
 
                 <h2 className="text-2xl font-bold text-neutral-900 mb-1">
                   {puzzle.title}
@@ -279,7 +287,7 @@ export default function Home() {
                 {puzzle.decisions.map((d) => (
                   <button
                     key={d.id}
-                    onClick={() => submitDecision(d.id)}
+                    onClick={() => submitDecision(d.id as ChoiceId)}
                     className="w-full text-left rounded-2xl border border-neutral-200 p-4 hover:bg-neutral-50 transition"
                   >
                     <span className="font-bold mr-2">{d.id}.</span>
