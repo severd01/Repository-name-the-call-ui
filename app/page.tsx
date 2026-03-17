@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { puzzles, type ChoiceId, type Clue } from "../data/puzzles";
-
+import puzzles from "../data/puzzles.json";
 type Screen =
   | "home"
   | "scenario"
