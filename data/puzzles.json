@@ -4,36 +4,45 @@
     "title": "The Sick Family",
     "role": "Emergency Room Doctor",
     "difficulty": "Medium",
-    "scenario": "On a cold Christmas Eve evening, three members of the same family arrive at the ER within a short period of time. Earlier that night, they had eaten an early dinner together at home. All report headache, dizziness, nausea, and fatigue. None have a fever. Flu is circulating in the community, and at first the symptoms seem routine. But one detail in the case suggests a different explanation.",
+    "scenario": "On a cold Christmas Eve evening, three members of the same family arrive at the ER within a short period of time. Earlier that night, they had eaten dinner together at home. All report headache, dizziness, nausea, and fatigue. None have a fever. Flu is circulating in the community, and at first the symptoms seem routine. But one detail in the case suggests a different explanation.",
     "image": "/images/sick-family.png",
+
     "cluesRound1": [
       {
         "title": "Check flu exposure history",
+        "type": "Misleading",
         "result": "Two family members report coworkers recently had the flu."
       },
       {
         "title": "Ask what they ate",
+        "type": "Neutral",
         "result": "All three ate the same home-cooked dinner earlier in the evening."
       },
       {
-        "title": "Ask where symptoms began",
-        "result": "All symptoms began while they were inside their home."
+        "title": "Ask about home environment",
+        "type": "Helpful",
+        "result": "They say they've been staying inside most of the day with the windows closed because of the cold."
       }
     ],
+
     "cluesRound2": [
       {
         "title": "Check for fever",
+        "type": "Neutral",
         "result": "None of the patients have a fever."
       },
       {
         "title": "Give oxygen briefly",
-        "result": "All three patients report feeling noticeably better after oxygen."
+        "type": "Helpful",
+        "result": "All three patients report feeling noticeably better after receiving oxygen."
       },
       {
-        "title": "Check timing of symptoms",
-        "result": "Symptoms developed gradually over several hours."
+        "title": "Ask about recent illness exposure",
+        "type": "Misleading",
+        "result": "A close contact recently had a stomach virus earlier this week."
       }
     ],
+
     "decisions": [
       {
         "id": "A",
@@ -45,17 +54,22 @@
       },
       {
         "id": "C",
-        "text": "Investigate possible carbon monoxide exposure."
+        "text": "Administer oxygen and investigate possible carbon monoxide exposure."
       }
     ],
+
     "correct": "C",
-    "expertAction": "Keep the family for evaluation and investigate carbon monoxide exposure.",
-    "expertExplanation": "Multiple people from the same home developing the same symptoms at the same time is a strong environmental pattern. Carbon monoxide poisoning often looks like flu or food poisoning.",
-    "lesson": "When several patients from one location get sick together, think environmental exposure.",
+
+    "expertAction": "Keep the family for evaluation and immediately investigate carbon monoxide exposure.",
+
+    "expertExplanation": "Multiple people from the same home developing identical symptoms at the same time strongly suggests an environmental cause. Carbon monoxide poisoning often presents with headache, dizziness, and nausea and can easily be mistaken for flu or food poisoning.",
+
+    "lesson": "When several patients from one location get sick together, think environmental exposure before common illness.",
+
     "outcomes": {
-      "A": "They go home. Hours later, their condition deteriorates rapidly.",
+      "A": "They are sent home. Overnight, their symptoms worsen as the exposure continues.",
       "B": "They are discharged with a flu diagnosis while the real hazard remains active in their home.",
-      "C": "The environmental cause is identified and the family avoids further exposure."
+      "C": "The environmental cause is identified and the family avoids further exposure and serious harm."
     }
   }
 ]
