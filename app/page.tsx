@@ -15,13 +15,13 @@ type ClueType = "Helpful" | "Neutral" | "Misleading";
 
 type Round1Clue = {
   title: string;
-  type: ClueType;
+  type?: ClueType;
   result: string;
 };
 
 type Round2Clue = {
   title: string;
-  type: ClueType;
+  type?: ClueType;
   result:
     | string
     | {
@@ -88,12 +88,6 @@ function isBiasedPath(clue: Round1Clue | null) {
 function getRound2Result(clue: Round2Clue, biased: boolean) {
   if (typeof clue.result === "string") return clue.result;
   return biased ? clue.result.biased : clue.result.default;
-}
-
-function getTypeClasses(type: ClueType) {
-  if (type === "Helpful") return "bg-green-50 border-green-200";
-  if (type === "Neutral") return "bg-slate-50 border-slate-200";
-  return "bg-red-50 border-red-200";
 }
 
 export default function HomePage() {
@@ -240,16 +234,9 @@ export default function HomePage() {
                 <button
                   key={clue.title}
                   onClick={() => handleRound1Choice(clue)}
-                  className={`w-full rounded-2xl border p-5 text-left transition hover:shadow-sm ${getTypeClasses(
-                    clue.type
-                  )}`}
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="text-lg font-semibold">{clue.title}</div>
-                    <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-slate-700">
-                      {clue.type}
-                    </span>
-                  </div>
+                  <div className="text-lg font-semibold">{clue.title}</div>
                   <p className="mt-3 text-slate-700">{clue.result}</p>
                 </button>
               ))}
@@ -265,7 +252,7 @@ export default function HomePage() {
               </div>
               <h2 className="text-2xl font-bold">Choose your second clue</h2>
               <p className="mt-2 text-slate-600">
-                Your first clue has shaped how this next information appears.
+                Review one more piece of evidence before making your call.
               </p>
             </div>
 
@@ -282,16 +269,9 @@ export default function HomePage() {
                 <button
                   key={clue.title}
                   onClick={() => handleRound2Choice(clue)}
-                  className={`w-full rounded-2xl border p-5 text-left transition hover:shadow-sm ${getTypeClasses(
-                    clue.type
-                  )}`}
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <div className="text-lg font-semibold">{clue.title}</div>
-                    <span className="rounded-full bg-white/80 px-3 py-1 text-xs font-medium text-slate-700">
-                      {clue.type}
-                    </span>
-                  </div>
+                  <div className="text-lg font-semibold">{clue.title}</div>
                   <p className="mt-3 text-slate-700">
                     {getRound2Result(clue, biasedPath)}
                   </p>
