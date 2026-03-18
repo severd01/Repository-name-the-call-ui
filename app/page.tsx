@@ -237,7 +237,6 @@ export default function HomePage() {
                   className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
                   <div className="text-lg font-semibold">{clue.title}</div>
-                  <p className="mt-3 text-slate-700">{clue.result}</p>
                 </button>
               ))}
             </div>
@@ -272,9 +271,6 @@ export default function HomePage() {
                   className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
                   <div className="text-lg font-semibold">{clue.title}</div>
-                  <p className="mt-3 text-slate-700">
-                    {getRound2Result(clue, biasedPath)}
-                  </p>
                 </button>
               ))}
             </div>
