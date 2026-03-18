@@ -4,7 +4,7 @@
     "title": "The Sick Family",
     "role": "Emergency Room Doctor",
     "difficulty": "Medium",
-    "scenario": "On a cold Christmas Eve evening, three members of the same family arrive at the ER within a short period of time. Earlier that night, they had eaten dinner together at home. All report headache, dizziness, nausea, and fatigue. None have a fever. Flu is circulating in the community, and at first the symptoms seem routine. But one detail in the case suggests a different explanation.",
+    "scenario": "On a cold Christmas Eve evening, three members of the same family arrive at the ER within a short period of time. Earlier that night, they had eaten dinner together at home. All report headache, dizziness, nausea, and fatigue. Flu is circulating in the community, and at first the symptoms seem routine.",
     "image": "/images/sick-family.png",
     "cluesRound1": [
       {
@@ -13,7 +13,7 @@
       },
       {
         "title": "Ask what they ate",
-        "result": "All three ate the same home-cooked dinner earlier in the evening."
+        "result": "All three ate the same home-cooked dinner earlier in the evening. Steak and lobster."
       },
       {
         "title": "Ask about home environment",
@@ -22,30 +22,30 @@
     ],
     "cluesRound2": [
       {
-        "title": "Check for fever",
+        "title": "Check their temperature for possible fever.",
         "result": "None of the patients have a fever."
       },
       {
-        "title": "Give oxygen briefly",
-        "result": "All three patients report feeling noticeably better after receiving oxygen."
+        "title": "Ask the family if they had ever had lobster before?",
+        "result": "Lobster is their special family treat they have every year at Christmas."
       },
       {
-        "title": "Ask about recent illness exposure",
-        "result": "A close contact recently had a stomach virus earlier this week."
+        "title": "Ask the young boy if Santa is going to come down the fireplace this year.",
+        "result": "The boy responds that they don't have a fireplace but they do have a new heater that keeps the house extra warm!"
       }
     ],
     "decisions": [
       {
         "id": "A",
-        "text": "Treat as food poisoning and discharge."
+        "text": "Very likely food poisoning. Start IV immediately to prevent dehydration and continue to monitor each patient."
       },
       {
         "id": "B",
-        "text": "Treat as flu and discharge."
+        "text": "Given the recent exposure to flu it's obvious that the family has been exposed. Treat appropriately."
       },
       {
         "id": "C",
-        "text": "Administer oxygen and investigate possible carbon monoxide exposure."
+        "text": "Ask the nurse to put them on oxygen. Can't hurt."
       }
     ],
     "correct": "C",
@@ -53,9 +53,9 @@
     "expertExplanation": "Multiple people from the same home developing identical symptoms at the same time strongly suggests an environmental cause. Carbon monoxide poisoning often presents with headache, dizziness, and nausea and can easily be mistaken for flu or food poisoning.",
     "lesson": "When several patients from one location get sick together, think environmental exposure before common illness.",
     "outcomes": {
-      "A": "They are sent home. Overnight, their symptoms worsen as the exposure continues.",
-      "B": "They are discharged with a flu diagnosis while the real hazard remains active in their home.",
-      "C": "The environmental cause is identified and the family avoids further exposure and serious harm."
+      "A": "They are sent home. Overnight, their symptoms worsen as the exposure continues. Unfortunately, they all pass due to carbon monoxide poisoning in the home.",
+      "B": "They are discharged with a flu diagnosis.  Overnight, their symptoms worsen as the exposure continues. Unfortunately, they all pass due to carbon monoxide poisoning in the home.",
+      "C": "The environmental cause is identified due to carbon monoxide from a new heater in the home and the family avoids further exposure and serious harm."
     }
   }
 ]
