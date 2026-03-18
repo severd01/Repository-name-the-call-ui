@@ -85,7 +85,6 @@ function getRound2Result(clue: Round2Clue) {
 export default function HomePage() {
   const [screen, setScreen] = useState<Screen>("home");
   const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0);
-
   const [selectedClue1, setSelectedClue1] = useState<Round1Clue | null>(null);
   const [selectedClue2, setSelectedClue2] = useState<Round2Clue | null>(null);
   const [selectedDecision, setSelectedDecision] = useState<string | null>(null);
@@ -99,6 +98,13 @@ export default function HomePage() {
   const isCorrect = selectedDecision === currentPuzzle.correct;
   const score = getScore(isCorrect, cluesUsed);
   const scoreLabel = getScoreLabel(isCorrect, cluesUsed);
+
+  const chosenDecision = currentPuzzle.decisions.find(
+    (d) => d.id === selectedDecision
+  );
+  const correctDecision = currentPuzzle.decisions.find(
+    (d) => d.id === currentPuzzle.correct
+  );
 
   function startPuzzle(index: number) {
     setCurrentPuzzleIndex(index);
@@ -123,15 +129,31 @@ export default function HomePage() {
     setScreen("reveal");
   }
 
+  function resetCurrentPuzzle() {
+    setSelectedClue1(null);
+    setSelectedClue2(null);
+    setSelectedDecision(null);
+    setScreen("scenario");
+  }
+
   function resetToHome() {
+    setSelectedClue1(null);
+    setSelectedClue2(null);
+    setSelectedDecision(null);
     setScreen("home");
+  }
+
+  function nextCase() {
+    if (currentPuzzleIndex < typedPuzzles.length - 1) {
+      startPuzzle(currentPuzzleIndex + 1);
+    } else {
+      resetToHome();
+    }
   }
 
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
       <div className="mx-auto max-w-3xl">
-
-        {/* HEADER */}
         <header className="mb-8">
           <h1 className="text-4xl font-bold tracking-tight">The Call</h1>
           <p className="mt-2 text-lg text-slate-600">
@@ -139,163 +161,269 @@ export default function HomePage() {
           </p>
         </header>
 
-        {/* HOME */}
         {screen === "home" && (
           <section className="space-y-4">
             {typedPuzzles.map((puzzle, index) => (
               <button
                 key={puzzle.id}
                 onClick={() => startPuzzle(index)}
-                className="w-full rounded-2xl border bg-white p-6 text-left shadow-sm hover:shadow"
+                className="w-full rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:border-slate-300 hover:shadow"
               >
-                <div>
-                  <div className="text-sm text-slate-500">
-                    {puzzle.role}
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-sm font-medium uppercase tracking-wide text-slate-500">
+                      {puzzle.role}
+                    </div>
+                    <h2 className="mt-1 text-2xl font-semibold">{puzzle.title}</h2>
+                    <p className="mt-2 text-slate-600">{puzzle.difficulty}</p>
                   </div>
-                  <h2 className="text-2xl font-semibold">
-                    {puzzle.title}
-                  </h2>
-                  <p className="text-slate-600">{puzzle.difficulty}</p>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+                    Start
+                  </span>
                 </div>
               </button>
             ))}
           </section>
         )}
 
-        {/* SCENARIO */}
         {screen === "scenario" && (
-          <section className="bg-white p-6 rounded-2xl shadow-sm">
-            <h2 className="text-2xl font-bold">{currentPuzzle.title}</h2>
-            <p className="mt-4 text-slate-700">{currentPuzzle.scenario}</p>
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <div className="text-sm uppercase tracking-wide text-slate-500">
+                  {currentPuzzle.role}
+                </div>
+                <h2 className="text-3xl font-bold">{currentPuzzle.title}</h2>
+              </div>
+              <div className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+                {currentPuzzle.difficulty}
+              </div>
+            </div>
 
-            <div className="mt-6 flex gap-3">
+            {currentPuzzle.image && (
+              <img
+                src={currentPuzzle.image}
+                alt={currentPuzzle.title}
+                className="mb-6 h-64 w-full rounded-xl object-cover"
+              />
+            )}
+
+            <p className="text-lg leading-8 text-slate-700">
+              {currentPuzzle.scenario}
+            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
               <button
                 onClick={() => setScreen("decision")}
-                className="bg-slate-900 text-white px-4 py-2 rounded-lg"
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
               >
                 Make the Call Now
               </button>
-
               <button
                 onClick={() => setScreen("investigate1")}
-                className="border px-4 py-2 rounded-lg"
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
               >
-                Investigate
+                Begin Investigation
+              </button>
+              <button
+                onClick={resetToHome}
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Back
               </button>
             </div>
           </section>
         )}
 
-        {/* ROUND 1 */}
         {screen === "investigate1" && (
-          <section className="bg-white p-6 rounded-2xl shadow-sm">
-            <h2 className="text-xl font-bold">Choose your first clue</h2>
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6">
+              <div className="text-sm uppercase tracking-wide text-slate-500">
+                Round 1
+              </div>
+              <h2 className="text-2xl font-bold">Choose your first clue</h2>
+              <p className="mt-2 text-slate-600">
+                Pick one line of inquiry to shape your understanding of the case.
+              </p>
+            </div>
 
-            <div className="mt-4 space-y-3">
+            <div className="space-y-4">
               {currentPuzzle.cluesRound1.map((clue) => (
                 <button
                   key={clue.title}
                   onClick={() => handleRound1Choice(clue)}
-                  className="w-full border p-4 rounded-xl text-left hover:bg-slate-50"
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
-                  {clue.title}
+                  <div className="text-lg font-semibold">{clue.title}</div>
                 </button>
               ))}
             </div>
           </section>
         )}
 
-        {/* ROUND 2 */}
         {screen === "investigate2" && selectedClue1 && (
-          <section className="bg-white p-6 rounded-2xl shadow-sm">
-
-            <div className="mb-4">
-              <div className="text-sm text-slate-500">
-                Your line of thinking
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6">
+              <div className="text-sm uppercase tracking-wide text-slate-500">
+                Round 2
               </div>
-              <div className="font-semibold">{selectedClue1.title}</div>
-              <div className="text-slate-700">{selectedClue1.result}</div>
+              <h2 className="text-2xl font-bold">Choose your second clue</h2>
+              <p className="mt-2 text-slate-600">
+                Review one more piece of evidence before making your call.
+              </p>
             </div>
 
-            <button
-              onClick={() => setScreen("decision")}
-              className="mb-4 bg-slate-900 text-white px-4 py-2 rounded-lg"
-            >
-              Make the Call
-            </button>
+            <div className="mb-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div className="text-sm font-medium text-slate-500">
+                First clue selected
+              </div>
+              <div className="mt-1 text-lg font-semibold">{selectedClue1.title}</div>
+              <div className="mt-2 text-slate-700">{selectedClue1.result}</div>
+            </div>
 
-            <h3 className="font-semibold">Choose another clue</h3>
+            <div className="mb-6">
+              <button
+                onClick={() => setScreen("decision")}
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              >
+                Make the Call
+              </button>
+            </div>
 
-            <div className="mt-3 space-y-3">
+            <div className="space-y-4">
               {currentPuzzle.cluesRound2.map((clue) => (
                 <button
                   key={clue.title}
                   onClick={() => handleRound2Choice(clue)}
-                  className="w-full border p-4 rounded-xl text-left hover:bg-slate-50"
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
-                  {clue.title}
+                  <div className="text-lg font-semibold">{clue.title}</div>
                 </button>
               ))}
             </div>
           </section>
         )}
 
-        {/* DECISION */}
         {screen === "decision" && (
-          <section className="bg-white p-6 rounded-2xl shadow-sm">
-            <h2 className="text-xl font-bold">What do you do?</h2>
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6">
+              <div className="text-sm uppercase tracking-wide text-slate-500">
+                Final Decision
+              </div>
+              <h2 className="text-2xl font-bold">What do you do?</h2>
+              <p className="mt-2 text-slate-600">
+                Commit to the action you believe an expert should take.
+              </p>
+            </div>
 
-            <div className="mt-4 space-y-3">
-              {currentPuzzle.decisions.map((d) => (
+            {(selectedClue1 || selectedClue2) && (
+              <div className="mb-6 grid gap-4 md:grid-cols-2">
+                {selectedClue1 && (
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="text-sm font-medium text-slate-500">Clue 1</div>
+                    <div className="mt-1 font-semibold">{selectedClue1.title}</div>
+                    <div className="mt-2 text-slate-700">{selectedClue1.result}</div>
+                  </div>
+                )}
+
+                {selectedClue2 && (
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="text-sm font-medium text-slate-500">Clue 2</div>
+                    <div className="mt-1 font-semibold">{selectedClue2.title}</div>
+                    <div className="mt-2 text-slate-700">
+                      {getRound2Result(selectedClue2)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="space-y-4">
+              {currentPuzzle.decisions.map((decision) => (
                 <button
-                  key={d.id}
-                  onClick={() => handleDecision(d.id)}
-                  className="w-full border p-4 rounded-xl text-left hover:bg-slate-50"
+                  key={decision.id}
+                  onClick={() => handleDecision(decision.id)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
-                  {d.id}. {d.text}
+                  <div className="flex items-center gap-4">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 font-bold text-white">
+                      {decision.id}
+                    </span>
+                    <span className="text-lg font-medium">{decision.text}</span>
+                  </div>
                 </button>
               ))}
             </div>
           </section>
         )}
 
-        {/* REVEAL */}
         {screen === "reveal" && selectedDecision && (
-          <section className="bg-white p-6 rounded-2xl shadow-sm">
-
-            <h2 className="text-2xl font-bold mb-2">Case Review</h2>
-
-            <div className={`inline-block px-3 py-1 rounded-full border ${getBadgeClasses(scoreLabel)}`}>
-              {scoreLabel} · {score} pts
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6 flex flex-wrap items-center gap-3">
+              <h2 className="text-3xl font-bold">Case Review</h2>
+              <span
+                className={`rounded-full border px-4 py-2 text-sm font-semibold ${getBadgeClasses(
+                  scoreLabel
+                )}`}
+              >
+                {scoreLabel} · {score} pts
+              </span>
             </div>
 
-            <div className="mt-4">
-              <div className="font-semibold">Your choice</div>
-              <p>{currentPuzzle.outcomes[selectedDecision]}</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="text-sm font-medium text-slate-500">Your choice</div>
+                <div className="mt-1 text-lg font-semibold">
+                  {selectedDecision}. {chosenDecision?.text}
+                </div>
+                <p className="mt-3 text-slate-700">
+                  {currentPuzzle.outcomes[selectedDecision]}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="text-sm font-medium text-slate-500">
+                  Expert action
+                </div>
+                <div className="mt-1 text-lg font-semibold">
+                  {currentPuzzle.correct}. {correctDecision?.text}
+                </div>
+                <p className="mt-3 text-slate-700">{currentPuzzle.expertAction}</p>
+                <p className="mt-3 text-slate-700">
+                  {currentPuzzle.expertExplanation}
+                </p>
+              </div>
             </div>
 
-            <div className="mt-4">
-              <div className="font-semibold">Expert action</div>
-              <p>{currentPuzzle.expertExplanation}</p>
+            <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-4">
+              <div className="text-sm font-medium text-blue-700">Lesson</div>
+              <p className="mt-2 text-blue-900">{currentPuzzle.lesson}</p>
             </div>
 
-            <div className="mt-4">
-              <div className="font-semibold">Lesson</div>
-              <p>{currentPuzzle.lesson}</p>
-            </div>
-
-            <div className="mt-6 flex gap-3">
+            <div className="mt-8 flex flex-wrap gap-3">
               <button
                 onClick={resetToHome}
-                className="bg-slate-900 text-white px-4 py-2 rounded-lg"
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
               >
-                Home
+                Back to Home
               </button>
+              <button
+                onClick={resetCurrentPuzzle}
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Play Again
+              </button>
+              {currentPuzzleIndex < typedPuzzles.length - 1 && (
+                <button
+                  onClick={nextCase}
+                  className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                >
+                  Next Case
+                </button>
+              )}
             </div>
-
           </section>
         )}
-
       </div>
     </main>
   );
