@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import puzzles from "../data/puzzles.json";
 
 type Screen =
@@ -16,21 +16,18 @@ type ClueType = "helpful" | "neutral" | "misleading";
 type Round1Clue = {
   title: string;
   result: string;
-  type?: ClueType;
+  type: ClueType;
+};
+
+type BranchingResult = {
+  helpful: string;
+  neutral: string;
+  misleading: string;
 };
 
 type Round2Clue = {
   title: string;
-  type?: ClueType;
-  result:
-    | string
-    | {
-        default: string;
-        biased?: string;
-        helpful?: string;
-        neutral?: string;
-        misleading?: string;
-      };
+  result: BranchingResult;
 };
 
 type Decision = {
@@ -84,66 +81,24 @@ function getBadgeClasses(label: string) {
   return "bg-red-100 text-red-800 border-red-200";
 }
 
-function getRound2Result(clue: Round2Clue, selectedClue1: Round1Clue | null) {
-  if (typeof clue.result === "string") return clue.result;
-
-  const clue1Type = selectedClue1?.type;
-
-  if (clue1Type && clue.result[clue1Type]) {
-    return clue.result[clue1Type] as string;
-  }
-
-  if (clue1Type === "misleading" && clue.result.biased) {
-    return clue.result.biased;
-  }
-
-  return clue.result.default;
-}
-
-function getClueTypeClasses(type?: ClueType) {
-  if (type === "helpful") {
-    return "bg-green-50 text-green-700 border-green-200";
-  }
-  if (type === "neutral") {
-    return "bg-slate-50 text-slate-700 border-slate-200";
-  }
-  if (type === "misleading") {
-    return "bg-red-50 text-red-700 border-red-200";
-  }
-  return "bg-slate-50 text-slate-700 border-slate-200";
-}
-
-function getClueTypeLabel(type?: ClueType) {
-  if (!type) return null;
-  return type.charAt(0).toUpperCase() + type.slice(1);
+function getRound2Result(clue: Round2Clue, clue1: Round1Clue | null) {
+  if (!clue1) return "";
+  return clue.result[clue1.type];
 }
 
 function ClueSummaryCard({
   label,
   title,
   body,
-  type,
 }: {
   label: string;
   title: string;
   body: string;
-  type?: ClueType;
 }) {
   return (
     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <div className="flex items-center justify-between gap-3">
-        <div className="text-sm font-medium text-slate-500">{label}</div>
-        {type && (
-          <span
-            className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${getClueTypeClasses(
-              type
-            )}`}
-          >
-            {getClueTypeLabel(type)}
-          </span>
-        )}
-      </div>
-      <div className="mt-1 font-semibold">{title}</div>
+      <div className="text-sm font-medium text-slate-500">{label}</div>
+      <div className="mt-1 text-lg font-semibold">{title}</div>
       <div className="mt-2 text-slate-700">{body}</div>
     </div>
   );
@@ -158,34 +113,25 @@ export default function HomePage() {
 
   const currentPuzzle = typedPuzzles[currentPuzzleIndex];
 
-  if (!currentPuzzle) {
-    return (
-      <main className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
-        <div className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h1 className="text-2xl font-bold">No puzzles found</h1>
-          <p className="mt-2 text-slate-600">
-            Make sure your puzzles.json file contains at least one puzzle.
-          </p>
-        </div>
-      </main>
-    );
-  }
+  const cluesUsed = useMemo(() => {
+    return [selectedClue1, selectedClue2].filter(Boolean).length;
+  }, [selectedClue1, selectedClue2]);
 
-  const cluesUsed = [selectedClue1, selectedClue2].filter(Boolean).length;
-  const isCorrect = selectedDecision === currentPuzzle.correct;
-  const score = getScore(isCorrect, cluesUsed);
-  const scoreLabel = getScoreLabel(isCorrect, cluesUsed);
+  const isCorrect = selectedDecision === currentPuzzle?.correct;
+  const score = getScore(!!isCorrect, cluesUsed);
+  const scoreLabel = getScoreLabel(!!isCorrect, cluesUsed);
 
-  const chosenDecision = currentPuzzle.decisions.find(
+  const chosenDecision = currentPuzzle?.decisions.find(
     (d) => d.id === selectedDecision
   );
-  const correctDecision = currentPuzzle.decisions.find(
+  const correctDecision = currentPuzzle?.decisions.find(
     (d) => d.id === currentPuzzle.correct
   );
 
-  const round2ResolvedText = selectedClue2
-    ? getRound2Result(selectedClue2, selectedClue1)
-    : null;
+  const round2ResolvedText = useMemo(() => {
+    if (!selectedClue1 || !selectedClue2) return null;
+    return getRound2Result(selectedClue2, selectedClue1);
+  }, [selectedClue1, selectedClue2]);
 
   function clearSelections() {
     setSelectedClue1(null);
@@ -233,6 +179,19 @@ export default function HomePage() {
     }
   }
 
+  if (!currentPuzzle) {
+    return (
+      <main className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
+        <div className="mx-auto max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h1 className="text-2xl font-bold">No puzzles found</h1>
+          <p className="mt-2 text-slate-600">
+            Add at least one puzzle to <code>puzzles.json</code>.
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
       <div className="mx-auto max-w-3xl">
@@ -256,7 +215,9 @@ export default function HomePage() {
                     <div className="text-sm font-medium uppercase tracking-wide text-slate-500">
                       {puzzle.role}
                     </div>
-                    <h2 className="mt-1 text-2xl font-semibold">{puzzle.title}</h2>
+                    <h2 className="mt-1 text-2xl font-semibold">
+                      {puzzle.title}
+                    </h2>
                     <p className="mt-2 text-slate-600">{puzzle.difficulty}</p>
                   </div>
                   <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
@@ -351,18 +312,7 @@ export default function HomePage() {
                   onClick={() => handleRound1Choice(clue)}
                   className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="text-lg font-semibold">{clue.title}</div>
-                    {clue.type && (
-                      <span
-                        className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${getClueTypeClasses(
-                          clue.type
-                        )}`}
-                      >
-                        {getClueTypeLabel(clue.type)}
-                      </span>
-                    )}
-                  </div>
+                  <div className="text-lg font-semibold">{clue.title}</div>
                 </button>
               ))}
             </div>
@@ -386,7 +336,6 @@ export default function HomePage() {
                 label="First clue selected"
                 title={selectedClue1.title}
                 body={selectedClue1.result}
-                type={selectedClue1.type}
               />
             </div>
 
@@ -416,18 +365,7 @@ export default function HomePage() {
                   onClick={() => handleRound2Choice(clue)}
                   className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
                 >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="text-lg font-semibold">{clue.title}</div>
-                    {clue.type && (
-                      <span
-                        className={`rounded-full border px-2.5 py-1 text-xs font-semibold ${getClueTypeClasses(
-                          clue.type
-                        )}`}
-                      >
-                        {getClueTypeLabel(clue.type)}
-                      </span>
-                    )}
-                  </div>
+                  <div className="text-lg font-semibold">{clue.title}</div>
                 </button>
               ))}
             </div>
@@ -453,7 +391,6 @@ export default function HomePage() {
                     label="Clue 1"
                     title={selectedClue1.title}
                     body={selectedClue1.result}
-                    type={selectedClue1.type}
                   />
                 )}
 
@@ -462,7 +399,6 @@ export default function HomePage() {
                     label="Clue 2"
                     title={selectedClue2.title}
                     body={round2ResolvedText}
-                    type={selectedClue2.type}
                   />
                 )}
               </div>
@@ -518,7 +454,6 @@ export default function HomePage() {
                     label="Your Clue 1"
                     title={selectedClue1.title}
                     body={selectedClue1.result}
-                    type={selectedClue1.type}
                   />
                 )}
                 {selectedClue2 && round2ResolvedText && (
@@ -526,7 +461,6 @@ export default function HomePage() {
                     label="Your Clue 2"
                     title={selectedClue2.title}
                     body={round2ResolvedText}
-                    type={selectedClue2.type}
                   />
                 )}
               </div>
@@ -534,7 +468,9 @@ export default function HomePage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="text-sm font-medium text-slate-500">Your choice</div>
+                <div className="text-sm font-medium text-slate-500">
+                  Your choice
+                </div>
                 <div className="mt-1 text-lg font-semibold">
                   {selectedDecision}. {chosenDecision?.text}
                 </div>

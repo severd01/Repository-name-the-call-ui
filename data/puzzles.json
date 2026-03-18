@@ -1,61 +1,150 @@
 [
   {
-    "id": 3,
+    "id": 1,
     "title": "The Sick Family",
     "role": "Emergency Room Doctor",
     "difficulty": "Medium",
-    "scenario": "On a cold Christmas Eve evening, three members of the same family arrive at the ER within a short period of time. Earlier that night, they had eaten dinner together at home. All report headache, dizziness, nausea, and fatigue. Flu is circulating in the community, and at first the symptoms seem routine.",
+    "scenario": "On a cold Christmas Eve evening, three members of the same family arrive at the ER within a short period of time. Earlier that night, they had eaten dinner together at home. All report headache, dizziness, nausea, and fatigue. None have a fever. Flu is circulating in the community, and at first the symptoms seem routine. But one detail in the case suggests a different explanation.",
     "image": "/images/sick-family.png",
     "cluesRound1": [
       {
         "title": "Check flu exposure history",
-        "result": "Two family members report coworkers recently had the flu."
+        "result": "Two family members report coworkers recently had the flu.",
+        "type": "misleading"
       },
       {
         "title": "Ask what they ate",
-        "result": "All three ate the same home-cooked dinner earlier in the evening. Steak and lobster."
+        "result": "All three ate the same meal, but one family member who barely ate is just as sick as the others.",
+        "type": "neutral"
       },
       {
-        "title": "Ask about home environment",
-        "result": "They say they've been staying inside most of the day with the windows closed because of the cold."
+        "title": "Ask about the home environment",
+        "result": "The family says the house was unusually cold, so they used a portable heater indoors during dinner.",
+        "type": "helpful"
       }
     ],
     "cluesRound2": [
       {
-        "title": "Check their temperature for possible fever",
-        "result": "None of the patients have a fever."
+        "title": "Review symptom timing",
+        "result": {
+          "helpful": "All three became ill at roughly the same time, pointing toward a shared environmental exposure rather than an infection.",
+          "neutral": "The symptoms began within a similar window after dinner, but that pattern is not specific on its own.",
+          "misleading": "Because everyone got sick after the meal, a food-related illness still feels like the most obvious explanation."
+        }
       },
       {
-        "title": "Ask whether they have eaten lobster before",
-        "result": "Lobster is a family tradition they have every Christmas Eve."
+        "title": "Check for fever or respiratory infection signs",
+        "result": {
+          "helpful": "None of the family members has a fever, cough, or sore throat, which makes flu less likely.",
+          "neutral": "None of the family members has a fever, cough, or sore throat.",
+          "misleading": "Even without fever, early viral illness can still seem possible when several people report vague symptoms."
+        }
       },
       {
-        "title": "Ask whether anything in the home changed recently",
-        "result": "The parents mention they started using a new space heater this week because of the cold."
+        "title": "Ask whether anyone outside the home is sick",
+        "result": {
+          "helpful": "No neighbors or guests are involved, making a household source more likely than a contagious outbreak.",
+          "neutral": "No one outside the household appears connected to the illness.",
+          "misleading": "Since coworkers recently had the flu, a viral explanation still feels plausible despite the unusual presentation."
+        }
       }
     ],
     "decisions": [
       {
         "id": "A",
-        "text": "Treat for likely food poisoning, start IV fluids, and continue monitoring."
+        "text": "Treat this as flu or food poisoning, give supportive care, and discharge if stable"
       },
       {
         "id": "B",
-        "text": "Treat for likely flu given the recent exposure history."
+        "text": "Order immediate carbon monoxide evaluation and move the family away from the exposure source"
       },
       {
         "id": "C",
-        "text": "Administer oxygen and investigate a possible environmental exposure in the home."
+        "text": "Admit for observation and wait for more severe symptoms before narrowing the diagnosis"
       }
     ],
-    "correct": "C",
-    "expertAction": "Keep the family for evaluation and immediately investigate carbon monoxide exposure.",
-    "expertExplanation": "Multiple people from the same home developing identical symptoms at the same time strongly suggests an environmental cause. Carbon monoxide poisoning often presents with headache, dizziness, and nausea and can easily be mistaken for flu or food poisoning.",
-    "lesson": "When several patients from one location get sick together, think environmental exposure before common illness.",
+    "correct": "B",
+    "expertAction": "The correct action was to suspect carbon monoxide poisoning immediately, remove the family from continued exposure, and begin urgent evaluation and treatment.",
+    "expertExplanation": "The shared symptoms, absence of fever, simultaneous onset, and indoor heater use on a cold night all point toward carbon monoxide exposure rather than flu or routine food illness. The key was recognizing the pattern before the family returned home and became even sicker.",
+    "lesson": "When multiple people from the same environment become ill at the same time with vague symptoms, think beyond the most common diagnosis and look for a shared hidden exposure.",
     "outcomes": {
-      "A": "They are treated for food poisoning while the true cause remains active in the home. Overnight, their condition worsens dangerously.",
-      "B": "They are discharged with a flu diagnosis while the real hazard remains active in their home. Overnight, their condition worsens dangerously.",
-      "C": "The environmental cause is identified, the family receives the right treatment, and further exposure is prevented."
+      "A": "You anchor on a familiar explanation and miss the environmental danger. If the family returns home, continued exposure could make the situation life-threatening.",
+      "B": "You identify the hidden cause quickly and make the expert call. Early recognition prevents the family from returning to a dangerous environment.",
+      "C": "You avoid an immediate discharge, but you lose valuable time by not acting on the likely cause. Observation alone does not remove the underlying danger."
+    }
+  },
+  {
+    "id": 2,
+    "title": "False Alarm",
+    "role": "Missile Warning Officer",
+    "difficulty": "Hard",
+    "scenario": "You are on duty during a period of intense Cold War tension when an early-warning system reports that several incoming missiles have been launched. The computer system shows high confidence, and there is enormous pressure to act quickly. Standard protocol allows only a very short window to assess whether the attack is real. One decision could trigger catastrophe.",
+    "image": "/images/petrov.png",
+    "cluesRound1": [
+      {
+        "title": "Review computer confidence level",
+        "result": "The system reports very high confidence that missiles have been launched.",
+        "type": "misleading"
+      },
+      {
+        "title": "Check geopolitical tensions",
+        "result": "Relations are extremely tense, and both sides are on edge.",
+        "type": "neutral"
+      },
+      {
+        "title": "Review number of missiles detected",
+        "result": "Only a small number of missiles are reported incoming, not the massive wave expected in a true first strike.",
+        "type": "helpful"
+      }
+    ],
+    "cluesRound2": [
+      {
+        "title": "Check ground radar confirmation",
+        "result": {
+          "helpful": "Ground radar does not confirm the launch, suggesting the alert may be false.",
+          "neutral": "Ground radar has not yet confirmed the launch.",
+          "misleading": "Ground radar has not yet confirmed the launch, but the computer alert still appears highly credible under time pressure."
+        }
+      },
+      {
+        "title": "Review known system limitations",
+        "result": {
+          "helpful": "The satellite warning system is relatively new and not yet fully trusted under all conditions.",
+          "neutral": "The system has performed well in prior testing, but this would be its most serious real-world alert.",
+          "misleading": "The system has successfully detected prior tests, which makes it tempting to trust the alert."
+        }
+      },
+      {
+        "title": "Assess strategic logic",
+        "result": {
+          "helpful": "A real first strike would likely involve many more missiles than the handful reported here.",
+          "neutral": "The limited number detected is unusual but not impossible.",
+          "misleading": "Even a small initial launch can feel too dangerous to dismiss when the stakes are this high."
+        }
+      }
+    ],
+    "decisions": [
+      {
+        "id": "A",
+        "text": "Report the launch as a real attack immediately"
+      },
+      {
+        "id": "B",
+        "text": "Delay escalation and classify the alert as likely false while continuing verification"
+      },
+      {
+        "id": "C",
+        "text": "Wait passively without making any classification"
+      }
+    ],
+    "correct": "B",
+    "expertAction": "The expert judged the warning to be a likely false alarm and delayed escalation while awaiting further confirmation.",
+    "expertExplanation": "The small number of missiles, lack of radar confirmation, and limitations of the warning system made the alert inconsistent with a genuine large-scale first strike. The expert resisted the pressure to trust a dramatic but incomplete signal.",
+    "lesson": "Under extreme pressure, experts do not just react to alarming data. They ask whether the data makes sense in the larger context.",
+    "outcomes": {
+      "A": "You trust the alarming signal and risk escalating a false alarm into a disaster.",
+      "B": "You make the disciplined call and avoid catastrophic escalation while verification continues.",
+      "C": "You avoid immediate escalation, but failing to classify the threat leaves your team without needed direction in a critical moment."
     }
   }
 ]
