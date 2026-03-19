@@ -142,6 +142,13 @@ export default function HomePage() {
     if (!selectedClue1 || !selectedClue2) return null;
     return getRound2Result(selectedClue2, selectedClue1);
   }, [selectedClue1, selectedClue2]);
+  const nextPuzzlePreview =
+    typedPuzzles[(currentPuzzleIndex + 1) % typedPuzzles.length];
+  const todayRole = currentPuzzle.role.replace("Emergency Room", "ER");
+  const tomorrowRole = nextPuzzlePreview.role.replace(
+    "Emergency Room",
+    "ER"
+  );
 
   function clearSelections() {
     setSelectedClue1(null);
@@ -204,38 +211,56 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
-      <div className="mx-auto max-w-3xl">
-        <header className="mb-8">
-          <h1 className="text-4xl font-bold tracking-tight">The Call</h1>
-          <p className="mt-2 text-lg text-slate-600">
-            Make the call with limited information.
+      <div className={`mx-auto ${screen === "home" ? "max-w-sm" : "max-w-3xl"}`}>
+        <header className={`${screen === "home" ? "mb-5 text-center" : "mb-8"}`}>
+          <h1
+            className={`tracking-tight text-slate-700 ${
+              screen === "home"
+                ? "font-serif text-5xl font-semibold uppercase"
+                : "text-4xl font-bold"
+            }`}
+          >
+            The Call
+          </h1>
+          <p className={`${screen === "home" ? "mt-3 text-xl" : "mt-2 text-lg"} text-slate-600`}>
+            {screen === "home"
+              ? "Make the call. Live with the outcome."
+              : "Make the call with limited information."}
           </p>
         </header>
 
         {screen === "home" && (
-          <section className="space-y-4">
-            {typedPuzzles.map((puzzle, index) => (
-              <button
-                key={puzzle.id}
-                onClick={() => startPuzzle(index)}
-                className="w-full rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:border-slate-300 hover:shadow"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <div className="text-sm font-medium uppercase tracking-wide text-slate-500">
-                      {puzzle.role}
-                    </div>
-                    <h2 className="mt-1 text-2xl font-semibold">
-                      {puzzle.title}
-                    </h2>
-                    <p className="mt-2 text-slate-600">{puzzle.difficulty}</p>
-                  </div>
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
-                    Start
-                  </span>
+          <section className="rounded-[28px] border border-slate-200 bg-white px-5 py-6 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
+            <div className="border-t border-slate-200 pt-5">
+              <div className="text-center text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
+                Today&apos;s Call
+              </div>
+              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-5 text-center shadow-sm">
+                <div className="text-[1.9rem] leading-tight font-medium text-slate-700">
+                  You are the {todayRole} today.
                 </div>
-              </button>
-            ))}
+                <button
+                  onClick={() => startPuzzle(currentPuzzleIndex)}
+                  className="mt-5 w-full rounded-[8px] bg-[#2f63b8] px-4 py-3 text-lg font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_4px_12px_rgba(47,99,184,0.35)] transition hover:bg-[#27549c]"
+                >
+                  Take the Case
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-5 border-t border-slate-200 pt-5">
+              <div className="text-center text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
+                Tomorrow&apos;s Call
+              </div>
+              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-5 text-center shadow-sm">
+                <div className="text-[1.75rem] leading-tight font-medium text-slate-700">
+                  Role: {tomorrowRole}
+                </div>
+                <div className="mt-3 text-xl text-slate-500">
+                  Available in 14h 32m
+                </div>
+              </div>
+            </div>
           </section>
         )}
 
