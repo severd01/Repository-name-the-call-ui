@@ -96,10 +96,14 @@ function ClueSummaryCard({
   body: string;
 }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-      <div className="text-sm font-medium text-slate-500">{label}</div>
-      <div className="mt-1 text-lg font-semibold">{title}</div>
-      <div className="mt-2 text-slate-700">{body}</div>
+    <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 shadow-sm">
+      <div className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
+        {label}
+      </div>
+      <div className="mt-2 text-2xl font-medium leading-tight text-slate-700">
+        {title}
+      </div>
+      <div className="mt-3 text-lg leading-8 text-slate-600">{body}</div>
     </div>
   );
 }
@@ -149,6 +153,15 @@ export default function HomePage() {
     "Emergency Room",
     "ER"
   );
+  const shellClass =
+    "rounded-[28px] border border-slate-200 bg-white px-5 py-6 shadow-[0_18px_45px_rgba(15,23,42,0.08)]";
+  const cardClass = "rounded-xl border border-slate-200 bg-slate-50 px-4 py-5 shadow-sm";
+  const primaryButtonClass =
+    "rounded-[8px] bg-[#2f63b8] px-5 py-3 text-lg font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_4px_12px_rgba(47,99,184,0.35)] transition hover:bg-[#27549c]";
+  const secondaryButtonClass =
+    "rounded-[8px] border border-slate-200 bg-white px-5 py-3 text-lg font-medium text-slate-700 shadow-sm transition hover:bg-slate-50";
+  const sectionEyebrow =
+    "text-sm font-semibold uppercase tracking-[0.22em] text-slate-500";
 
   function clearSelections() {
     setSelectedClue1(null);
@@ -210,7 +223,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
+    <main className="min-h-screen bg-[#ecebf1] px-4 py-8 text-slate-900">
       <div className={`mx-auto ${screen === "home" ? "max-w-sm" : "max-w-3xl"}`}>
         <header className={`${screen === "home" ? "mb-5 text-center" : "mb-8"}`}>
           <h1
@@ -230,18 +243,18 @@ export default function HomePage() {
         </header>
 
         {screen === "home" && (
-          <section className="rounded-[28px] border border-slate-200 bg-white px-5 py-6 shadow-[0_18px_45px_rgba(15,23,42,0.08)]">
+          <section className={shellClass}>
             <div className="border-t border-slate-200 pt-5">
-              <div className="text-center text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <div className={`${sectionEyebrow} text-center`}>
                 Today&apos;s Call
               </div>
-              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-5 text-center shadow-sm">
+              <div className={`${cardClass} mt-4 text-center`}>
                 <div className="text-[1.9rem] leading-tight font-medium text-slate-700">
                   You are the {todayRole} today.
                 </div>
                 <button
                   onClick={() => startPuzzle(currentPuzzleIndex)}
-                  className="mt-5 w-full rounded-[8px] bg-[#2f63b8] px-4 py-3 text-lg font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_4px_12px_rgba(47,99,184,0.35)] transition hover:bg-[#27549c]"
+                  className={`mt-5 w-full ${primaryButtonClass}`}
                 >
                   Take the Case
                 </button>
@@ -249,12 +262,12 @@ export default function HomePage() {
             </div>
 
             <div className="mt-5 border-t border-slate-200 pt-5">
-              <div className="text-center text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">
+              <div className={`${sectionEyebrow} text-center`}>
                 Tomorrow&apos;s Call
               </div>
-              <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-5 text-center shadow-sm">
+              <div className={`${cardClass} mt-4 text-center`}>
                 <div className="text-[1.75rem] leading-tight font-medium text-slate-700">
-                  Role: {tomorrowRole}
+                  Role: {tomorrowRole} &#128274;
                 </div>
                 <div className="mt-3 text-xl text-slate-500">
                   Available in 14h 32m
@@ -265,15 +278,17 @@ export default function HomePage() {
         )}
 
         {screen === "scenario" && (
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="mb-4 flex items-center justify-between">
+          <section className={shellClass}>
+            <div className="mb-5 flex items-center justify-between border-b border-slate-200 pb-4">
               <div>
-                <div className="text-sm uppercase tracking-wide text-slate-500">
+                <div className={sectionEyebrow}>
                   {currentPuzzle.role}
                 </div>
-                <h2 className="text-3xl font-bold">{currentPuzzle.title}</h2>
+                <h2 className="mt-2 text-4xl font-medium leading-tight text-slate-700">
+                  {currentPuzzle.title}
+                </h2>
               </div>
-              <div className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+              <div className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold uppercase tracking-[0.14em] text-slate-600">
                 {currentPuzzle.difficulty}
               </div>
             </div>
@@ -282,30 +297,30 @@ export default function HomePage() {
               <img
                 src={currentPuzzle.image}
                 alt={currentPuzzle.title}
-                className="mb-6 h-64 w-full rounded-xl object-cover"
+                className="mb-6 h-72 w-full rounded-xl object-cover shadow-sm"
               />
             )}
 
-            <p className="text-lg leading-8 text-slate-700">
+            <p className="text-[1.32rem] leading-9 text-slate-600">
               {currentPuzzle.scenario}
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <button
                 onClick={() => setScreen("decision")}
-                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+                className={primaryButtonClass}
               >
                 Make the Call Now
               </button>
               <button
                 onClick={() => setScreen("investigate1")}
-                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                className={secondaryButtonClass}
               >
                 Begin Investigation
               </button>
               <button
                 onClick={resetToHome}
-                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                className={secondaryButtonClass}
               >
                 Back
               </button>
@@ -314,13 +329,15 @@ export default function HomePage() {
         )}
 
         {screen === "investigate1" && (
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="mb-6">
-              <div className="text-sm uppercase tracking-wide text-slate-500">
+          <section className={shellClass}>
+            <div className="mb-6 border-b border-slate-200 pb-4">
+              <div className={sectionEyebrow}>
                 Round 1 - 2 Moves Remaining
               </div>
-              <h2 className="text-2xl font-bold">Choose your first clue</h2>
-              <p className="mt-2 text-slate-600">
+              <h2 className="mt-2 text-4xl font-medium text-slate-700">
+                Choose your first clue
+              </h2>
+              <p className="mt-3 text-xl leading-8 text-slate-600">
                 Pick one line of inquiry to shape your understanding of the case.
               </p>
             </div>
@@ -330,9 +347,9 @@ export default function HomePage() {
                 <button
                   key={clue.title}
                   onClick={() => handleRound1Choice(clue)}
-                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-5 py-4 text-left text-xl font-medium text-slate-700 shadow-sm transition hover:border-[#2f63b8]/35 hover:bg-slate-50"
                 >
-                  <div className="text-lg font-semibold">{clue.title}</div>
+                  <div>{clue.title}</div>
                 </button>
               ))}
             </div>
@@ -342,13 +359,13 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setScreen("decision")}
-                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+                className={primaryButtonClass}
               >
                 Make the Call Now
               </button>
               <button
                 onClick={() => setScreen("scenario")}
-                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                className={secondaryButtonClass}
               >
                 Back to Scenario
               </button>
@@ -357,13 +374,15 @@ export default function HomePage() {
         )}
 
         {screen === "investigate2" && selectedClue1 && (
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="mb-6">
-              <div className="text-sm uppercase tracking-wide text-slate-500">
+          <section className={shellClass}>
+            <div className="mb-6 border-b border-slate-200 pb-4">
+              <div className={sectionEyebrow}>
                 Round 2 - 1 Moves Remaining
               </div>
-              <h2 className="text-2xl font-bold">Choose your second clue</h2>
-              <p className="mt-2 text-slate-600">
+              <h2 className="mt-2 text-4xl font-medium text-slate-700">
+                Choose your second clue
+              </h2>
+              <p className="mt-3 text-xl leading-8 text-slate-600">
                 Review one more piece of evidence before making your call.
               </p>
             </div>
@@ -381,9 +400,9 @@ export default function HomePage() {
                 <button
                   key={clue.title}
                   onClick={() => handleRound2Choice(clue)}
-                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-5 py-4 text-left text-xl font-medium text-slate-700 shadow-sm transition hover:border-[#2f63b8]/35 hover:bg-slate-50"
                 >
-                  <div className="text-lg font-semibold">{clue.title}</div>
+                  <div>{clue.title}</div>
                 </button>
               ))}
             </div>
@@ -393,7 +412,7 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setScreen("decision")}
-                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+                className={primaryButtonClass}
               >
                 Make the Call
               </button>
@@ -403,7 +422,7 @@ export default function HomePage() {
                   setSelectedClue2(null);
                   setScreen("investigate1");
                 }}
-                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                className={secondaryButtonClass}
               >
                 Change First Clue
               </button>
@@ -412,13 +431,15 @@ export default function HomePage() {
         )}
 
         {screen === "decision" && (
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="mb-6">
-              <div className="text-sm uppercase tracking-wide text-slate-500">
+          <section className={shellClass}>
+            <div className="mb-6 border-b border-slate-200 pb-4">
+              <div className={sectionEyebrow}>
                 Final Decision
               </div>
-              <h2 className="text-2xl font-bold">What do you do?</h2>
-              <p className="mt-2 text-slate-600">
+              <h2 className="mt-2 text-4xl font-medium text-slate-700">
+                What do you do?
+              </h2>
+              <p className="mt-3 text-xl leading-8 text-slate-600">
                 Commit to the action you believe an expert should take.
               </p>
             </div>
@@ -448,7 +469,7 @@ export default function HomePage() {
                 onClick={() =>
                   setScreen(selectedClue1 ? "investigate2" : "scenario")
                 }
-                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                className={secondaryButtonClass}
               >
                 Back
               </button>
@@ -459,13 +480,15 @@ export default function HomePage() {
                 <button
                   key={decision.id}
                   onClick={() => handleDecision(decision.id)}
-                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
+                  className="w-full rounded-xl border border-slate-200 bg-white px-5 py-4 text-left shadow-sm transition hover:border-[#2f63b8]/35 hover:bg-slate-50"
                 >
                   <div className="flex items-center gap-4">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 font-bold text-white">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2f63b8] text-lg font-bold text-white shadow-sm">
                       {decision.id}
                     </span>
-                    <span className="text-lg font-medium">{decision.text}</span>
+                    <span className="text-xl leading-8 font-medium text-slate-700">
+                      {decision.text}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -474,11 +497,11 @@ export default function HomePage() {
         )}
 
         {screen === "reveal" && selectedDecision && (
-          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <section className={shellClass}>
             <div className="mb-6 flex flex-wrap items-center gap-3">
-              <h2 className="text-3xl font-bold">Case Review</h2>
+              <h2 className="text-4xl font-medium text-slate-700">Case Review</h2>
               <span
-                className={`rounded-full border px-4 py-2 text-sm font-semibold ${getBadgeClasses(
+                className={`rounded-full border px-4 py-2 text-sm font-semibold shadow-sm ${getBadgeClasses(
                   scoreLabel
                 )}`}
               >
@@ -506,55 +529,57 @@ export default function HomePage() {
             )}
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="text-sm font-medium text-slate-500">
+              <div className={cardClass}>
+                <div className={sectionEyebrow}>
                   Your choice
                 </div>
-                <div className="mt-1 text-lg font-semibold">
+                <div className="mt-2 text-2xl font-medium leading-tight text-slate-700">
                   {selectedDecision}. {chosenDecision?.text}
                 </div>
-                <p className="mt-3 text-slate-700">
+                <p className="mt-3 text-lg leading-8 text-slate-600">
                   {currentPuzzle.outcomes[selectedDecision] ??
                     "No outcome written for this decision yet."}
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div className="text-sm font-medium text-slate-500">
+              <div className={cardClass}>
+                <div className={sectionEyebrow}>
                   Expert action
                 </div>
-                <div className="mt-1 text-lg font-semibold">
+                <div className="mt-2 text-2xl font-medium leading-tight text-slate-700">
                   {currentPuzzle.correct}. {correctDecision?.text}
                 </div>
-                <p className="mt-3 text-slate-700">{currentPuzzle.expertAction}</p>
-                <p className="mt-3 text-slate-700">
+                <p className="mt-3 text-lg leading-8 text-slate-600">{currentPuzzle.expertAction}</p>
+                <p className="mt-3 text-lg leading-8 text-slate-600">
                   {currentPuzzle.expertExplanation}
                 </p>
               </div>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-4">
-              <div className="text-sm font-medium text-blue-700">Lesson</div>
-              <p className="mt-2 text-blue-900">{currentPuzzle.lesson}</p>
+            <div className="mt-6 rounded-xl border border-blue-200 bg-blue-50 px-4 py-5 shadow-sm">
+              <div className="text-sm font-semibold uppercase tracking-[0.18em] text-blue-700">
+                Lesson
+              </div>
+              <p className="mt-3 text-lg leading-8 text-blue-900">{currentPuzzle.lesson}</p>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
               <button
                 onClick={resetToHome}
-                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+                className={primaryButtonClass}
               >
                 Back to Home
               </button>
               <button
                 onClick={resetCurrentPuzzle}
-                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                className={secondaryButtonClass}
               >
                 Play Again
               </button>
               {currentPuzzleIndex < typedPuzzles.length - 1 && (
                 <button
                   onClick={nextCase}
-                  className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                  className={secondaryButtonClass}
                 >
                   Next Case
                 </button>
