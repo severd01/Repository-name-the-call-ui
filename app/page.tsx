@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import puzzles from "../data/puzzles.json";
 
@@ -277,9 +278,13 @@ export default function HomePage() {
             </div>
 
             {currentPuzzle.image && (
-              <img
+              <Image
                 src={currentPuzzle.image}
                 alt={currentPuzzle.title}
+                width={1200}
+                height={800}
+                sizes="(max-width: 768px) 100vw, 896px"
+                priority
                 className="h-64 w-full rounded-none object-cover"
               />
             )}
@@ -321,9 +326,13 @@ export default function HomePage() {
             </div>
 
             {currentPuzzle.image && (
-              <img
+              <Image
                 src={currentPuzzle.image}
                 alt={currentPuzzle.title}
+                width={1200}
+                height={800}
+                sizes="(max-width: 768px) 100vw, 896px"
+                priority
                 className="h-64 w-full rounded-none object-cover"
               />
             )}
@@ -374,9 +383,13 @@ export default function HomePage() {
 
             <div className="grid gap-4 sm:grid-cols-[180px_minmax(0,1fr)]">
               {currentPuzzle.image && (
-                <img
+                <Image
                   src={currentPuzzle.image}
                   alt={currentPuzzle.title}
+                  width={1200}
+                  height={800}
+                  sizes="(max-width: 640px) 100vw, 180px"
+                  priority
                   className="h-40 w-full object-cover"
                 />
               )}

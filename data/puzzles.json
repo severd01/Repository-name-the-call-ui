@@ -5,7 +5,7 @@
     "role": "Emergency Room Doctor",
     "difficulty": "Medium",
     "scenario": "On a bitterly cold Christmas Eve, three members of the same family arrive at the ER after sharing dinner at home. Each now reports headache, dizziness, nausea, and fatigue.",
-    "image": "/images/sick-family.png",
+    "image": "/images/sick-family.jpg",
     "cluesRound1": [
       {
         "title": "Check flu exposure history",
