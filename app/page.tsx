@@ -142,31 +142,6 @@ export default function HomePage() {
     if (!selectedClue1 || !selectedClue2) return null;
     return getRound2Result(selectedClue2, selectedClue1);
   }, [selectedClue1, selectedClue2]);
-  const nextPuzzlePreview =
-    typedPuzzles[(currentPuzzleIndex + 1) % typedPuzzles.length];
-  const shortRole = currentPuzzle.role
-    .replace("Emergency Room", "ER")
-    .replace("Missile Warning Officer", "Warning Officer");
-  const selectedClueTitles = [selectedClue1?.title, selectedClue2?.title].filter(
-    Boolean
-  ) as string[];
-  const round1Status =
-    screen === "home" || screen === "scenario"
-      ? "Round 1 - 2 Moves Remaining"
-      : "Round 1 - 1 Move Remaining";
-  const round2Status =
-    screen === "investigate2" || screen === "decision" || screen === "reveal"
-      ? "Round 2 - 1 Moves Remaining"
-      : "Round 2";
-  const cardClass =
-    "rounded-[28px] border border-slate-200/90 bg-white px-5 py-5 shadow-[0_18px_45px_rgba(15,23,42,0.08)]";
-  const buttonPrimaryClass =
-    "w-full rounded-[10px] bg-[#2f63b8] px-4 py-3 text-center text-base font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_3px_8px_rgba(47,99,184,0.35)] transition hover:bg-[#27549c]";
-  const buttonSecondaryClass =
-    "w-full rounded-[10px] border border-slate-200 bg-white px-4 py-3 text-center text-base font-medium text-slate-700 transition hover:bg-slate-50";
-  const currentOutcome = selectedDecision
-    ? currentPuzzle.outcomes[selectedDecision]
-    : null;
 
   function clearSelections() {
     setSelectedClue1(null);
@@ -228,89 +203,53 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#ebeaf0] px-5 py-8 text-[#2b3346]">
-      <div className="mx-auto max-w-[1480px]">
-        <header className="mb-8 flex flex-col gap-2 px-1 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h1 className="font-serif text-4xl font-semibold tracking-tight text-[#31405f]">
-              The Call
-            </h1>
-            <p className="mt-1 text-base text-slate-600">
-              Make the call. Live with the outcome.
-            </p>
-          </div>
-          <div className="text-sm text-slate-500">
-            {currentPuzzle.title} · {currentPuzzle.difficulty}
-          </div>
+    <main className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
+      <div className="mx-auto max-w-3xl">
+        <header className="mb-8">
+          <h1 className="text-4xl font-bold tracking-tight">The Call</h1>
+          <p className="mt-2 text-lg text-slate-600">
+            Make the call with limited information.
+          </p>
         </header>
 
-        <section className="grid gap-5 xl:grid-cols-[280px_minmax(0,1.2fr)_minmax(0,1.1fr)_300px]">
-          <aside className={`${cardClass} self-start`}>
-            <div className="border-b border-slate-200 pb-5 text-center">
-              <div className="font-serif text-[2rem] font-semibold uppercase tracking-tight text-[#3b4a67]">
-                The Call
-              </div>
-              <p className="mt-3 text-sm text-slate-600">
-                Make the call. Live with the outcome.
-              </p>
-            </div>
-
-            <div className="mt-5 border-b border-slate-200 pb-5">
-              <div className="text-center text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-                Today&apos;s Call
-              </div>
-              <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-center">
-                <div className="text-lg font-medium text-slate-700">
-                  You are the {shortRole} today.
+        {screen === "home" && (
+          <section className="space-y-4">
+            {typedPuzzles.map((puzzle, index) => (
+              <button
+                key={puzzle.id}
+                onClick={() => startPuzzle(index)}
+                className="w-full rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:border-slate-300 hover:shadow"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <div className="text-sm font-medium uppercase tracking-wide text-slate-500">
+                      {puzzle.role}
+                    </div>
+                    <h2 className="mt-1 text-2xl font-semibold">
+                      {puzzle.title}
+                    </h2>
+                    <p className="mt-2 text-slate-600">{puzzle.difficulty}</p>
+                  </div>
+                  <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+                    Start
+                  </span>
                 </div>
-                <button
-                  onClick={() =>
-                    screen === "home" ? startPuzzle(currentPuzzleIndex) : resetCurrentPuzzle()
-                  }
-                  className={`mt-4 ${buttonPrimaryClass}`}
-                >
-                  {screen === "home" ? "Take the Case" : "Restart the Case"}
-                </button>
-              </div>
-            </div>
+              </button>
+            ))}
+          </section>
+        )}
 
-            <div className="mt-5">
-              <div className="text-center text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
-                Tomorrow&apos;s Call
-              </div>
-              <div className="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-center shadow-sm">
-                <div className="text-lg font-medium text-slate-700">
-                  Role: {nextPuzzlePreview.role}
+        {screen === "scenario" && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <div className="text-sm uppercase tracking-wide text-slate-500">
+                  {currentPuzzle.role}
                 </div>
-                <div className="mt-2 text-sm text-slate-500">
-                  {screen === "reveal"
-                    ? "Ready after this case"
-                    : "Available once today's call is complete"}
-                </div>
-                {screen === "reveal" && typedPuzzles.length > 1 ? (
-                  <button
-                    onClick={nextCase}
-                    className={`mt-4 ${buttonSecondaryClass}`}
-                  >
-                    Open Next Case
-                  </button>
-                ) : (
-                  <div className="mt-4 text-sm text-slate-400">Locked</div>
-                )}
+                <h2 className="text-3xl font-bold">{currentPuzzle.title}</h2>
               </div>
-            </div>
-          </aside>
-
-          <section className={`${cardClass} self-start`}>
-            <div className="mb-4 flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
-              <div className="flex items-center gap-2 text-lg font-semibold text-[#2f63b8]">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-[#2f63b8]/40 text-xs">
-                  +
-                </span>
-                <span>{shortRole}</span>
-              </div>
-              <div className="text-sm font-medium text-slate-500">
-                {round1Status}
+              <div className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+                {currentPuzzle.difficulty}
               </div>
             </div>
 
@@ -318,346 +257,286 @@ export default function HomePage() {
               <img
                 src={currentPuzzle.image}
                 alt={currentPuzzle.title}
-                className="h-52 w-full rounded-[20px] object-cover"
+                className="mb-6 h-64 w-full rounded-xl object-cover"
               />
             )}
 
-            <p className="mt-5 text-[1.05rem] leading-8 text-slate-700">
+            <p className="text-lg leading-8 text-slate-700">
               {currentPuzzle.scenario}
             </p>
 
-            <div className="mt-5 space-y-3">
-              {currentPuzzle.cluesRound1.map((clue) => {
-                const isSelected = selectedClue1?.title === clue.title;
-                return (
-                  <button
-                    key={clue.title}
-                    onClick={() => handleRound1Choice(clue)}
-                    className={`w-full rounded-[10px] border px-4 py-3 text-base font-medium transition ${
-                      isSelected
-                        ? "border-[#2f63b8] bg-[#edf3ff] text-[#244b8e]"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-                    }`}
-                  >
-                    {clue.title}
-                  </button>
-                );
-              })}
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                onClick={() => setScreen("decision")}
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              >
+                Make the Call Now
+              </button>
+              <button
+                onClick={() => setScreen("investigate1")}
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Begin Investigation
+              </button>
+              <button
+                onClick={resetToHome}
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Back
+              </button>
+            </div>
+          </section>
+        )}
+
+        {screen === "investigate1" && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6">
+              <div className="text-sm uppercase tracking-wide text-slate-500">
+                Round 1 - 2 Moves Remaining
+              </div>
+              <h2 className="text-2xl font-bold">Choose your first clue</h2>
+              <p className="mt-2 text-slate-600">
+                Pick one line of inquiry to shape your understanding of the case.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {currentPuzzle.cluesRound1.map((clue) => (
+                <button
+                  key={clue.title}
+                  onClick={() => handleRound1Choice(clue)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
+                >
+                  <div className="text-lg font-semibold">{clue.title}</div>
+                </button>
+              ))}
             </div>
 
             <ChoiceDivider label="or" />
 
-            <div className="space-y-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setScreen("decision")}
-                className={buttonPrimaryClass}
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              >
+                Make the Call Now
+              </button>
+              <button
+                onClick={() => setScreen("scenario")}
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Back to Scenario
+              </button>
+            </div>
+          </section>
+        )}
+
+        {screen === "investigate2" && selectedClue1 && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6">
+              <div className="text-sm uppercase tracking-wide text-slate-500">
+                Round 2 - 1 Moves Remaining
+              </div>
+              <h2 className="text-2xl font-bold">Choose your second clue</h2>
+              <p className="mt-2 text-slate-600">
+                Review one more piece of evidence before making your call.
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <ClueSummaryCard
+                label="First clue selected"
+                title={selectedClue1.title}
+                body={selectedClue1.result}
+              />
+            </div>
+
+            <div className="space-y-4">
+              {currentPuzzle.cluesRound2.map((clue) => (
+                <button
+                  key={clue.title}
+                  onClick={() => handleRound2Choice(clue)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
+                >
+                  <div className="text-lg font-semibold">{clue.title}</div>
+                </button>
+              ))}
+            </div>
+
+            <ChoiceDivider label="or" />
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => setScreen("decision")}
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
               >
                 Make the Call
               </button>
               <button
-                onClick={() =>
-                  screen === "home" ? startPuzzle(currentPuzzleIndex) : setScreen("scenario")
-                }
-                className={buttonSecondaryClass}
+                onClick={() => {
+                  setSelectedClue1(null);
+                  setSelectedClue2(null);
+                  setScreen("investigate1");
+                }}
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
               >
-                {screen === "home" ? "Preview the Case" : "Back to Scenario"}
+                Change First Clue
               </button>
             </div>
           </section>
+        )}
 
-          <section className={`${cardClass} self-start`}>
-            <div className="mb-4 flex items-center justify-between gap-4 border-b border-slate-200 pb-3">
-              <div className="flex items-center gap-2 text-lg font-semibold text-[#2f63b8]">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-[#2f63b8]/40 text-xs">
-                  +
-                </span>
-                <span>{shortRole}</span>
+        {screen === "decision" && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6">
+              <div className="text-sm uppercase tracking-wide text-slate-500">
+                Final Decision
               </div>
-              <div className="text-sm font-medium text-slate-500">
-                {screen === "decision" || screen === "reveal"
-                  ? "Make the Call"
-                  : round2Status}
-              </div>
+              <h2 className="text-2xl font-bold">What do you do?</h2>
+              <p className="mt-2 text-slate-600">
+                Commit to the action you believe an expert should take.
+              </p>
             </div>
 
-            {selectedClue1 ? (
-              <>
-                {currentPuzzle.image && (
-                  <div className="grid gap-4 sm:grid-cols-[160px_minmax(0,1fr)]">
-                    <img
-                      src={currentPuzzle.image}
-                      alt={currentPuzzle.title}
-                      className="h-36 w-full rounded-[16px] object-cover"
-                    />
-                    <div>
-                      <div className="text-xl font-semibold text-[#2f63b8]">
-                        {selectedClue1.title}
-                      </div>
-                      <p className="mt-2 text-base leading-7 text-slate-600">
-                        {selectedClue1.result}
-                      </p>
-                    </div>
-                  </div>
+            {(selectedClue1 || selectedClue2) && (
+              <div className="mb-6 grid gap-4 md:grid-cols-2">
+                {selectedClue1 && (
+                  <ClueSummaryCard
+                    label="Clue 1"
+                    title={selectedClue1.title}
+                    body={selectedClue1.result}
+                  />
                 )}
 
-                <div className="mt-5 space-y-3">
-                  {screen === "decision" || screen === "reveal"
-                    ? currentPuzzle.decisions.map((decision) => {
-                        const isChosen = selectedDecision === decision.id;
-                        const isCorrectDecision = currentPuzzle.correct === decision.id;
-                        return (
-                          <button
-                            key={decision.id}
-                            onClick={() => handleDecision(decision.id)}
-                            className={`flex w-full items-center gap-3 rounded-[10px] border px-4 py-3 text-left transition ${
-                              isChosen
-                                ? "border-[#2f63b8] bg-[#edf3ff]"
-                                : isCorrectDecision && screen === "reveal"
-                                  ? "border-emerald-200 bg-emerald-50"
-                                  : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50"
-                            }`}
-                          >
-                            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[#2f63b8] text-sm font-bold text-white">
-                              {decision.id}
-                            </span>
-                            <span className="text-base font-medium text-slate-700">
-                              {decision.text}
-                            </span>
-                          </button>
-                        );
-                      })
-                    : currentPuzzle.cluesRound2.map((clue) => {
-                        const isSelected = selectedClue2?.title === clue.title;
-                        return (
-                          <button
-                            key={clue.title}
-                            onClick={() => handleRound2Choice(clue)}
-                            className={`w-full rounded-[10px] border px-4 py-3 text-base font-medium transition ${
-                              isSelected
-                                ? "border-[#2f63b8] bg-[#edf3ff] text-[#244b8e]"
-                                : "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50"
-                            }`}
-                          >
-                            {clue.title}
-                          </button>
-                        );
-                      })}
-                </div>
-
-                <ChoiceDivider label="or" />
-
-                <div className="space-y-3">
-                  {screen !== "reveal" && (
-                    <button
-                      onClick={() => setScreen("decision")}
-                      className={buttonPrimaryClass}
-                    >
-                      Make the Call
-                    </button>
-                  )}
-                  <button
-                    onClick={() => {
-                      if (screen === "decision" || screen === "reveal") {
-                        setScreen("investigate2");
-                        return;
-                      }
-                      setSelectedClue1(null);
-                      setSelectedClue2(null);
-                      setScreen("investigate1");
-                    }}
-                    className={buttonSecondaryClass}
-                  >
-                    {screen === "decision" || screen === "reveal"
-                      ? "Review Clues"
-                      : "Change First Clue"}
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="rounded-[20px] border border-dashed border-slate-300 bg-slate-50 px-5 py-10 text-center">
-                <div className="text-2xl font-semibold text-slate-700">
-                  Choose a first clue
-                </div>
-                <p className="mx-auto mt-3 max-w-sm text-base leading-7 text-slate-500">
-                  Your second round card will open here once you investigate the
-                  case. This mirrors the side-by-side flow from your current UI.
-                </p>
-                <button
-                  onClick={() =>
-                    screen === "home" ? startPuzzle(currentPuzzleIndex) : setScreen("investigate1")
-                  }
-                  className={`mx-auto mt-6 block max-w-xs ${buttonPrimaryClass}`}
-                >
-                  Begin Investigation
-                </button>
+                {selectedClue2 && round2ResolvedText && (
+                  <ClueSummaryCard
+                    label="Clue 2"
+                    title={selectedClue2.title}
+                    body={round2ResolvedText}
+                  />
+                )}
               </div>
             )}
-          </section>
 
-          <aside className={`${cardClass} self-start`}>
-            <div className="text-center text-[2rem] font-semibold tracking-tight text-[#2f3f5f]">
-              {screen === "reveal" ? "Case Review" : "Today&apos;s Case"}
+            <div className="mb-6 flex flex-wrap gap-3">
+              <button
+                onClick={() =>
+                  setScreen(selectedClue1 ? "investigate2" : "scenario")
+                }
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Back
+              </button>
             </div>
 
-            <div className="mt-4 border-t border-slate-200 pt-4">
-              {screen === "reveal" ? (
-                <div className="space-y-5 text-[1rem]">
-                  <div>
-                    <div className="text-[1.35rem] font-semibold text-slate-800">
-                      Your Clues:
-                    </div>
-                    <div className="mt-3 space-y-2 text-slate-700">
-                      {selectedClueTitles.length > 0 ? (
-                        selectedClueTitles.map((title) => (
-                          <div key={title} className="flex items-start gap-2">
-                            <span className="text-emerald-600">✓</span>
-                            <span>{title}</span>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="text-slate-500">No clues selected</div>
-                      )}
-                    </div>
+            <div className="space-y-4">
+              {currentPuzzle.decisions.map((decision) => (
+                <button
+                  key={decision.id}
+                  onClick={() => handleDecision(decision.id)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 font-bold text-white">
+                      {decision.id}
+                    </span>
+                    <span className="text-lg font-medium">{decision.text}</span>
                   </div>
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
 
-                  <div className="border-t border-slate-200 pt-4">
-                    <div className="text-[1.35rem] font-semibold text-slate-800">
-                      Right Answer:
-                    </div>
-                    <div className="mt-3 flex items-start gap-2 text-emerald-700">
-                      <span>✓</span>
-                      <span>{correctDecision?.text}</span>
-                    </div>
-                  </div>
+        {screen === "reveal" && selectedDecision && (
+          <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="mb-6 flex flex-wrap items-center gap-3">
+              <h2 className="text-3xl font-bold">Case Review</h2>
+              <span
+                className={`rounded-full border px-4 py-2 text-sm font-semibold ${getBadgeClasses(
+                  scoreLabel
+                )}`}
+              >
+                {scoreLabel} · {score} pts
+              </span>
+            </div>
 
-                  <div className="border-t border-slate-200 pt-4">
-                    <div className="text-[1.35rem] font-semibold text-slate-800">
-                      Your Answer:
-                    </div>
-                    <div
-                      className={`mt-3 flex items-start gap-2 ${
-                        isCorrect ? "text-emerald-700" : "text-rose-700"
-                      }`}
-                    >
-                      <span>{isCorrect ? "✓" : "!"}</span>
-                      <span>{chosenDecision?.text}</span>
-                    </div>
-                  </div>
+            {(selectedClue1 || selectedClue2) && (
+              <div className="mb-6 grid gap-4 md:grid-cols-2">
+                {selectedClue1 && (
+                  <ClueSummaryCard
+                    label="Your Clue 1"
+                    title={selectedClue1.title}
+                    body={selectedClue1.result}
+                  />
+                )}
+                {selectedClue2 && round2ResolvedText && (
+                  <ClueSummaryCard
+                    label="Your Clue 2"
+                    title={selectedClue2.title}
+                    body={round2ResolvedText}
+                  />
+                )}
+              </div>
+            )}
 
-                  <div className="border-t border-slate-200 pt-4">
-                    <div className="text-[1.35rem] font-semibold text-slate-800">
-                      Compare to Other ER Docs:
-                    </div>
-                    <div className="mt-3 text-slate-700">
-                      Your Score: Top {Math.max(3, 35 - score / 3)}%
-                    </div>
-                    <div className="mt-3 flex items-end gap-2">
-                      {[11, 2, 3].map((value, index) => (
-                        <div key={value} className="flex-1">
-                          <div className="text-center text-xs text-slate-500">
-                            {value}%
-                          </div>
-                          <div
-                            className="mt-1 rounded-sm bg-[#9cb78d]"
-                            style={{ height: `${20 + index * 8}px` }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {currentOutcome && (
-                    <div className="border-t border-slate-200 pt-4 text-sm leading-6 text-slate-600">
-                      {currentOutcome}
-                    </div>
-                  )}
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="text-sm font-medium text-slate-500">
+                  Your choice
                 </div>
-              ) : (
-                <div className="space-y-5 text-[1rem]">
-                  <div>
-                    <div className="text-[1.35rem] font-semibold text-slate-800">
-                      Your Clues:
-                    </div>
-                    <div className="mt-3 space-y-2 text-slate-700">
-                      {currentPuzzle.cluesRound1.slice(0, 3).map((clue) => {
-                        const active =
-                          selectedClueTitles.includes(clue.title) ||
-                          currentPuzzle.cluesRound2.some(
-                            (round2) => round2.title === clue.title && selectedClueTitles.includes(round2.title)
-                          );
-                        return (
-                          <div key={clue.title} className="flex items-start gap-2">
-                            <span className={active ? "text-emerald-600" : "text-slate-300"}>
-                              ✓
-                            </span>
-                            <span>{clue.title}</span>
-                          </div>
-                        );
-                      })}
-                      {selectedClue2 && (
-                        <div className="flex items-start gap-2">
-                          <span className="text-emerald-600">✓</span>
-                          <span>{selectedClue2.title}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="border-t border-slate-200 pt-4">
-                    <div className="text-[1.35rem] font-semibold text-slate-800">
-                      Focus:
-                    </div>
-                    <p className="mt-3 leading-7 text-slate-600">
-                      {selectedClue1
-                        ? selectedClue1.result
-                        : "Pick one clue, then decide whether to investigate once more or make the call."}
-                    </p>
-                  </div>
-
-                  {round2ResolvedText && (
-                    <div className="border-t border-slate-200 pt-4">
-                      <div className="text-[1.35rem] font-semibold text-slate-800">
-                        Latest Insight:
-                      </div>
-                      <p className="mt-3 leading-7 text-slate-600">
-                        {round2ResolvedText}
-                      </p>
-                    </div>
-                  )}
-
-                  <div className="border-t border-slate-200 pt-4">
-                    <button
-                      onClick={resetToHome}
-                      className={buttonPrimaryClass}
-                    >
-                      Back to Home
-                    </button>
-                  </div>
+                <div className="mt-1 text-lg font-semibold">
+                  {selectedDecision}. {chosenDecision?.text}
                 </div>
+                <p className="mt-3 text-slate-700">
+                  {currentPuzzle.outcomes[selectedDecision] ??
+                    "No outcome written for this decision yet."}
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div className="text-sm font-medium text-slate-500">
+                  Expert action
+                </div>
+                <div className="mt-1 text-lg font-semibold">
+                  {currentPuzzle.correct}. {correctDecision?.text}
+                </div>
+                <p className="mt-3 text-slate-700">{currentPuzzle.expertAction}</p>
+                <p className="mt-3 text-slate-700">
+                  {currentPuzzle.expertExplanation}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-2xl border border-blue-200 bg-blue-50 p-4">
+              <div className="text-sm font-medium text-blue-700">Lesson</div>
+              <p className="mt-2 text-blue-900">{currentPuzzle.lesson}</p>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button
+                onClick={resetToHome}
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              >
+                Back to Home
+              </button>
+              <button
+                onClick={resetCurrentPuzzle}
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Play Again
+              </button>
+              {currentPuzzleIndex < typedPuzzles.length - 1 && (
+                <button
+                  onClick={nextCase}
+                  className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+                >
+                  Next Case
+                </button>
               )}
             </div>
-
-            {screen === "reveal" && (
-              <div className="mt-5 space-y-3 border-t border-slate-200 pt-5">
-                <div
-                  className={`rounded-full border px-4 py-2 text-center text-sm font-semibold ${getBadgeClasses(
-                    scoreLabel
-                  )}`}
-                >
-                  {scoreLabel} · {score} pts
-                </div>
-                <button onClick={resetCurrentPuzzle} className={buttonSecondaryClass}>
-                  Play Again
-                </button>
-                {typedPuzzles.length > 1 && (
-                  <button onClick={nextCase} className={buttonPrimaryClass}>
-                    Next Case
-                  </button>
-                )}
-              </div>
-            )}
-          </aside>
-        </section>
+          </section>
+        )}
       </div>
     </main>
   );
