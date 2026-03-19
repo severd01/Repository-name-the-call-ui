@@ -294,6 +294,10 @@ export default function HomePage() {
                 {currentPuzzle.scenario}
               </p>
 
+              <div className="mt-5 rounded-[6px] border border-amber-200 bg-amber-50 px-4 py-3 text-[0.98rem] leading-7 text-amber-900 shadow-sm">
+                Make the call sooner to earn more points.
+              </div>
+
               <div className="mt-6 flex flex-wrap gap-3">
                 <button
                   onClick={() => setScreen("investigate1")}
