@@ -4,7 +4,7 @@
     "title": "The Sick Family",
     "role": "Emergency Room Doctor",
     "difficulty": "Medium",
-    "scenario": "On a cold Christmas Eve evening, three members of the same family arrive at the ER within a short period of time. Earlier that night, they had eaten dinner together at home. All report headache, dizziness, nausea, and fatigue. None have a fever. Flu is circulating in the community, and at first the symptoms seem routine. But one detail in the case suggests a different explanation.",
+    "scenario": "On a bitterly cold Christmas Eve, three members of the same family arrive at the ER after sharing dinner at home. Each now reports headache, dizziness, nausea, and fatigue.",
     "image": "/images/sick-family.png",
     "cluesRound1": [
       {
