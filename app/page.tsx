@@ -104,6 +104,16 @@ function ClueSummaryCard({
   );
 }
 
+function ChoiceDivider({ label }: { label: string }) {
+  return (
+    <div className="my-5 flex items-center gap-3 text-sm font-medium text-slate-400">
+      <div className="h-px flex-1 bg-slate-200" />
+      <span>{label}</span>
+      <div className="h-px flex-1 bg-slate-200" />
+    </div>
+  );
+}
+
 export default function HomePage() {
   const [screen, setScreen] = useState<Screen>("home");
   const [currentPuzzleIndex, setCurrentPuzzleIndex] = useState(0);
@@ -282,27 +292,12 @@ export default function HomePage() {
           <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="mb-6">
               <div className="text-sm uppercase tracking-wide text-slate-500">
-                Round 1
+                Round 1 - 2 Moves Remaining
               </div>
               <h2 className="text-2xl font-bold">Choose your first clue</h2>
               <p className="mt-2 text-slate-600">
                 Pick one line of inquiry to shape your understanding of the case.
               </p>
-            </div>
-
-            <div className="mb-6 flex flex-wrap gap-3">
-              <button
-                onClick={() => setScreen("decision")}
-                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
-              >
-                Make the Call Now
-              </button>
-              <button
-                onClick={() => setScreen("scenario")}
-                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
-              >
-                Back to Scenario
-              </button>
             </div>
 
             <div className="space-y-4">
@@ -316,6 +311,23 @@ export default function HomePage() {
                 </button>
               ))}
             </div>
+
+            <ChoiceDivider label="or" />
+
+            <div className="flex flex-wrap gap-3">
+              <button
+                onClick={() => setScreen("decision")}
+                className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
+              >
+                Make the Call Now
+              </button>
+              <button
+                onClick={() => setScreen("scenario")}
+                className="rounded-xl border border-slate-300 bg-white px-5 py-3 font-medium text-slate-700 transition hover:bg-slate-50"
+              >
+                Back to Scenario
+              </button>
+            </div>
           </section>
         )}
 
@@ -323,7 +335,7 @@ export default function HomePage() {
           <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <div className="mb-6">
               <div className="text-sm uppercase tracking-wide text-slate-500">
-                Round 2
+                Round 2 - 1 Moves Remaining
               </div>
               <h2 className="text-2xl font-bold">Choose your second clue</h2>
               <p className="mt-2 text-slate-600">
@@ -339,7 +351,21 @@ export default function HomePage() {
               />
             </div>
 
-            <div className="mb-6 flex flex-wrap gap-3">
+            <div className="space-y-4">
+              {currentPuzzle.cluesRound2.map((clue) => (
+                <button
+                  key={clue.title}
+                  onClick={() => handleRound2Choice(clue)}
+                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
+                >
+                  <div className="text-lg font-semibold">{clue.title}</div>
+                </button>
+              ))}
+            </div>
+
+            <ChoiceDivider label="or" />
+
+            <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setScreen("decision")}
                 className="rounded-xl bg-slate-900 px-5 py-3 font-medium text-white transition hover:bg-slate-800"
@@ -356,18 +382,6 @@ export default function HomePage() {
               >
                 Change First Clue
               </button>
-            </div>
-
-            <div className="space-y-4">
-              {currentPuzzle.cluesRound2.map((clue) => (
-                <button
-                  key={clue.title}
-                  onClick={() => handleRound2Choice(clue)}
-                  className="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50 hover:shadow-sm"
-                >
-                  <div className="text-lg font-semibold">{clue.title}</div>
-                </button>
-              ))}
             </div>
           </section>
         )}
